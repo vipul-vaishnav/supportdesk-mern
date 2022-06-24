@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcryptjs';
 import userModel from './../models/userModel.js';
+import genToken from './../token/genToken.js';
 
 // @desc To register a new user
 // @route /api/v1/users/register
@@ -36,6 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
           _id: newUser._id,
           name: newUser.name,
           email: newUser.email,
+          token: genToken(newUser._id),
           message: 'User registered successfully',
         });
       } else {
@@ -61,13 +63,16 @@ const loginUser = asyncHandler(async (req, res) => {
     const userExists = await userModel.findOne({ email: email });
 
     if (userExists) {
+      // #check if password matches
       const checkPassword = await bcrypt.compare(password, userExists.password);
+
       if (checkPassword) {
         res.status(200).json({
           status: 'success',
           _id: userExists._id,
           name: userExists.name,
           email: userExists.email,
+          token: genToken(userExists._id),
           message: 'User logged in successfully',
         });
       } else {
@@ -81,4 +86,14 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser };
+// @desc get data of currently logged in user
+// @route /api/v1/users/me
+// @access PRIVATE
+const getMe = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Hii its me',
+  });
+});
+
+export { registerUser, loginUser, getMe };
