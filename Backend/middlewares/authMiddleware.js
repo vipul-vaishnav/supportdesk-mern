@@ -19,7 +19,7 @@ const AUTH = asyncHandler(async (req, res, next) => {
       const { id } = jwt.verify(token, SECRET_KEY);
 
       // get user from id
-      req.user = await userModel.findById(id);
+      req.user = await userModel.findById(id).select('-password');
 
       // calling next middleware
       next();
