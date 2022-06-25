@@ -5,6 +5,7 @@ import colors from 'colors';
 import connectDB from './configs/connectDB.js';
 import errorHandler from './middlewares/errorMiddleware.js';
 import userRouter from './routes/userRoutes.js';
+import ticketRouter from './routes/ticketRoutes.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/tickets', ticketRouter);
 
 // Error handler
 app.use(errorHandler);
